@@ -17250,13 +17250,6 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void GroupCollection_System_Collections_IList
 		IL2CPP_RAISE_MANAGED_EXCEPTION(L_0, ((RuntimeMethod*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&GroupCollection_System_Collections_IList_Insert_m3CDAAB43F292FD0ABD2D9595F02233FB55577623_RuntimeMethod_var)));
 	}
 }
-// System.Boolean System.Text.RegularExpressions.GroupCollection::System.Collections.IList.get_IsFixedSize()
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool GroupCollection_System_Collections_IList_get_IsFixedSize_m5AA2CBFB17E2617597BDFBB56CCA1E435A763014 (GroupCollection_tFFA1789730DD9EA122FBE77DC03BFEDCC3F2945E* __this, const RuntimeMethod* method) 
-{
-	{
-		return (bool)1;
-	}
-}
 // System.Void System.Text.RegularExpressions.GroupCollection::System.Collections.IList.Remove(System.Object)
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void GroupCollection_System_Collections_IList_Remove_m32982B763D442200E71B8A5E6C85C9501A555F23 (GroupCollection_tFFA1789730DD9EA122FBE77DC03BFEDCC3F2945E* __this, RuntimeObject* ___value0, const RuntimeMethod* method) 
 {
