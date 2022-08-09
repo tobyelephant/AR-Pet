@@ -12,7 +12,7 @@ public class SpawnableManager : MonoBehaviour
     [SerializeField]
     GameObject spawnablePrefab;
     Camera arCam;
-    GameObject spawnedObject;
+    public GameObject spawnedObject;
     public int numberOfPetsAllowed = 1;
     private int currentNumberOfCats  = 0;
 
@@ -50,13 +50,15 @@ public class SpawnableManager : MonoBehaviour
 
             else if(Input.GetTouch(0).phase == TouchPhase.Moved&&spawnedObject != null)//Determine if the touch is a moving touch
             {
-                spawnedObject.transform.position = m_Hits[0].pose.position;
+                // spawnedObject.transform.position = m_Hits[0].pose.position;
+                spawnedObject.GetComponent<petMoveTo>().StartMove(m_Hits[0].pose.position); 
             }
+            
 
-            if(Input.GetTouch(0).phase == TouchPhase.Ended) //the touch has ended when it ends
-            {
-                spawnedObject = null;
-            }
+            // if(Input.GetTouch(0).phase == TouchPhase.Ended) //the touch has ended when it ends
+            // {
+            //     spawnedObject = null;
+            // }
         }
     }
 
@@ -65,6 +67,9 @@ public class SpawnableManager : MonoBehaviour
         if(currentNumberOfCats < numberOfPetsAllowed){
             currentNumberOfCats = currentNumberOfCats +1;
             spawnedObject = Instantiate(spawnablePrefab, spawnPosition, Quaternion.identity);
+            spawnedObject.transform.LookAt(arCam.transform);
+            spawnedObject.transform.rotation = Quaternion.Euler(0.0f,
+            spawnedObject.transform.rotation.eulerAngles.y, spawnedObject.transform.rotation.z);
         }
         
     }
