@@ -7,12 +7,16 @@ public class SpawnableManager : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField]
-    ARRaycastManager m_RaycastManager;
+    ARRaycastManager m_RaycastManager; //create a raycast manager
     List<ARRaycastHit> m_Hits = new List<ARRaycastHit>();
     [SerializeField]
     GameObject spawnablePrefab;
     Camera arCam;
     GameObject spawnedObject;
+    public int numberOfPetsAllowed = 1;
+    private int currentNumberOfCats  = 0;
+
+
     void Start()
     {
         spawnedObject = null;
@@ -28,26 +32,28 @@ public class SpawnableManager : MonoBehaviour
         RaycastHit hit;
         Ray ray = arCam.ScreenPointToRay(Input.GetTouch(0).position);
 
-        if (m_RaycastManager.Raycast(Input.GetTouch(0).position, m_Hits))
+        if (m_RaycastManager.Raycast(Input.GetTouch(0).position, m_Hits)) // Only returns true if there is at least one hit
         {
-            if (Input.GetTouch(0).phase == TouchPhase.Began && spawnedObject == null)
+            if (Input.GetTouch(0).phase == TouchPhase.Began && spawnedObject == null) // when first touch is detected and no spawned object is created
             {
-                if (Physics.Raycast(ray, out hit))
+                if (Physics.Raycast(ray, out hit)) // // Does the ray intersect any objects excluding the player layer
                 {
-                    if (hit.collider.gameObject.tag == "Spawnable")
+                    if (hit.collider.gameObject.tag == "Spawnable") // if hit object is spawnable object
                     {
                         spawnedObject = hit.collider.gameObject;
                     }
                     else{
-                        SpawnPrefab(m_Hits[0].pose.position);
+                        SpawnPrefab(m_Hits[0].pose.position); //instantiate the prefab and assign that object to our spawnedobject variable.
                     }
                 }
             }
-            else if(Input.GetTouch(0).phase == TouchPhase.Moved&&spawnedObject != null)
+
+            else if(Input.GetTouch(0).phase == TouchPhase.Moved&&spawnedObject != null)//Determine if the touch is a moving touch
             {
                 spawnedObject.transform.position = m_Hits[0].pose.position;
             }
-            if(Input.GetTouch(0).phase == TouchPhase.Ended)
+
+            if(Input.GetTouch(0).phase == TouchPhase.Ended) //the touch has ended when it ends
             {
                 spawnedObject = null;
             }
@@ -56,6 +62,10 @@ public class SpawnableManager : MonoBehaviour
 
     private void SpawnPrefab(Vector3 spawnPosition)
     {
-        spawnedObject = Instantiate(spawnablePrefab, spawnPosition, Quaternion.identity);
+        if(currentNumberOfCats < numberOfPetsAllowed){
+            currentNumberOfCats = currentNumberOfCats +1;
+            spawnedObject = Instantiate(spawnablePrefab, spawnPosition, Quaternion.identity);
+        }
+        
     }
 }
