@@ -11,12 +11,15 @@ public class SpawnableManager : MonoBehaviour
     List<ARRaycastHit> m_Hits = new List<ARRaycastHit>();
     [SerializeField]
     GameObject spawnablePrefab;
+    public GameObject foodPrefab;
     Camera arCam;
     public GameObject spawnedObject;
     public int numberOfPetsAllowed = 1;
     private int currentNumberOfCats  = 0;
     public Animator petAnim;
     public ARSessionOrigin ar_session_origin;
+    public GameObject Food;
+    public float speed = 0.3f;
 
 
     void Start()
@@ -50,6 +53,10 @@ public class SpawnableManager : MonoBehaviour
                     }
                     else{
                         SpawnPrefab(m_Hits[0].pose.position); //instantiate the prefab and assign that object to our spawnedobject variable.
+                        foreach(var plane in ar_session_origin.GetComponent<ARPlaneManager>().trackables){
+                            plane.gameObject.SetActive(false);
+                            }
+                        ar_session_origin.GetComponent<ARPlaneManager>().enabled = false;
                     }
                 }
             }
@@ -57,6 +64,7 @@ public class SpawnableManager : MonoBehaviour
             else if(Input.GetTouch(0).phase == TouchPhase.Moved&&spawnedObject != null)//Determine if the touch is a moving touch
             {
                 // spawnedObject.transform.position = m_Hits[0].pose.position;
+
                 spawnedObject.GetComponent<petMoveTo>().StartMove(m_Hits[0].pose.position);
 
                 petAnim = spawnedObject.GetComponent<Animator>();
@@ -69,6 +77,21 @@ public class SpawnableManager : MonoBehaviour
                 else if (Input.touchCount == 3 && petAnim.GetCurrentAnimatorStateInfo(0).IsName("Fish_Armature|Swimming_Normal"))
                 {
                     petAnim.Play("Fish_Armature|Out_Of_Water");
+                }
+
+                else if (Input.touchCount == 4)
+                {
+                    foodSpawn(m_Hits[0].pose.position);
+                    
+                    if (Food.activeSelf)
+                        {
+                            transform.position = Vector3.MoveTowards (transform.position, Food.transform.position, speed*Time.deltaTime);
+
+                            var lookPos = Food.transform.position - transform.position;
+                            lookPos.y = 0;
+                            var rotation = Quaternion.LookRotation(lookPos);
+                            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 10f);
+                        }
                 }
             }
             
@@ -89,9 +112,12 @@ public class SpawnableManager : MonoBehaviour
             spawnedObject.transform.rotation = Quaternion.Euler(0.0f,
             spawnedObject.transform.rotation.eulerAngles.y, spawnedObject.transform.rotation.z);
         }
-
-        ar_session_origin.GetComponent<ARPlaneManager>().enabled = false;
         
+    }
+
+    private void foodSpawn(Vector3 foodPosition)
+    {
+        Food = Instantiate(foodPrefab, foodPosition, Quaternion.identity);
     }
 
 }
