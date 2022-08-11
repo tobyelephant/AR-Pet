@@ -15,6 +15,8 @@ public class SpawnableManager : MonoBehaviour
     public GameObject spawnedObject;
     public int numberOfPetsAllowed = 1;
     private int currentNumberOfCats  = 0;
+    public Animator petAnim;
+    public ARSessionOrigin ar_session_origin;
 
 
     void Start()
@@ -26,8 +28,11 @@ public class SpawnableManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
         if (Input.touchCount == 0)
             return;
+
 
         RaycastHit hit;
         Ray ray = arCam.ScreenPointToRay(Input.GetTouch(0).position);
@@ -41,6 +46,7 @@ public class SpawnableManager : MonoBehaviour
                     if (hit.collider.gameObject.tag == "Spawnable") // if hit object is spawnable object
                     {
                         spawnedObject = hit.collider.gameObject;
+
                     }
                     else{
                         SpawnPrefab(m_Hits[0].pose.position); //instantiate the prefab and assign that object to our spawnedobject variable.
@@ -51,7 +57,19 @@ public class SpawnableManager : MonoBehaviour
             else if(Input.GetTouch(0).phase == TouchPhase.Moved&&spawnedObject != null)//Determine if the touch is a moving touch
             {
                 // spawnedObject.transform.position = m_Hits[0].pose.position;
-                spawnedObject.GetComponent<petMoveTo>().StartMove(m_Hits[0].pose.position); 
+                spawnedObject.GetComponent<petMoveTo>().StartMove(m_Hits[0].pose.position);
+
+                petAnim = spawnedObject.GetComponent<Animator>();
+
+                if (Input.touchCount == 2 && petAnim.GetCurrentAnimatorStateInfo(0).IsName("Fish_Armature|Swimming_Normal"))
+                 {
+                   petAnim.Play("Fish_Armature|Death");
+                 }
+
+                else if (Input.touchCount == 3 && petAnim.GetCurrentAnimatorStateInfo(0).IsName("Fish_Armature|Swimming_Normal"))
+                {
+                    petAnim.Play("Fish_Armature|Out_Of_Water");
+                }
             }
             
 
@@ -71,6 +89,9 @@ public class SpawnableManager : MonoBehaviour
             spawnedObject.transform.rotation = Quaternion.Euler(0.0f,
             spawnedObject.transform.rotation.eulerAngles.y, spawnedObject.transform.rotation.z);
         }
+
+        ar_session_origin.GetComponent<ARPlaneManager>().enabled = false;
         
     }
+
 }

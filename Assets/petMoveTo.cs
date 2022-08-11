@@ -49,12 +49,13 @@ public class petMoveTo : MonoBehaviour
         if(Vector3.Distance(startMarker.position, endMarker) <0.1){
             petAnim.SetBool("isRunning", false);
         }
+
     }
 
     public void StartMove(Vector3 endPos)
     {
          // Keep a note of the time the movement started.
-         petAnim.SetBool("isRunning", true);
+        petAnim.SetBool("isRunning", true);
         startMarker = this.transform;
         endMarker = endPos;
         startTime = Time.time;

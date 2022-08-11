@@ -473,6 +473,7 @@ MonoBehaviour:
   spawnablePrefab: {fileID: 4404546721642195244, guid: 988c01a769d631a4ebe65f2f6a95ae0a, type: 3}
   spawnedObject: {fileID: 0}
   numberOfPetsAllowed: 1
+  petAnim: {fileID: 0}
 --- !u!4 &347412483
 Transform:
   m_ObjectHideFlags: 0
